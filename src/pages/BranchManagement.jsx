@@ -12,7 +12,7 @@ const BranchManagement = () => {
     const [deleteLoading, setDeleteLoading] = useState(false)
 
     const fetchBranches = async () => {
-        const res = await axios.get('http://localhost:3000/api/branches/get-branches');
+        const res = await axios.get('https://ba-dastoor-backend.onrender.com/api/branches/get-branches');
         console.log(res?.data?.data)
         setBranches(res?.data?.data)
     }
@@ -81,7 +81,7 @@ const BranchManagement = () => {
 
         try {
 
-            await axios.delete(`http://localhost:3000/api/branches/delete-branches/${id}`);
+            await axios.delete(`https://ba-dastoor-backend.onrender.com/api/branches/delete-branches/${id}`);
 
             toast.update(toastId, {
                 render: 'Branch deleted successfully',

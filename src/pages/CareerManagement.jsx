@@ -15,7 +15,7 @@ const CareerManagement = () => {
 
     const fetchJobList = async () => {
         try {
-            const res = await axios.get("http://localhost:3000/api/jobs/all-jobs");
+            const res = await axios.get("https://ba-dastoor-backend.onrender.com/api/jobs/all-jobs");
             setJobList(res?.data?.data)
         } catch (error) {
             console.error("Error fetching job list:", error);
@@ -89,7 +89,7 @@ const CareerManagement = () => {
         const toastId = toast.loading('Deleting Job...');
 
         try {
-            const response = await axios.delete(`http://localhost:3000/api/jobs/delete-job/${id}`);
+            const response = await axios.delete(`https://ba-dastoor-backend.onrender.com/api/jobs/delete-job/${id}`);
             toast.update(toastId, {
                 render: 'Content deleted successfully 🗑️',
                 type: 'success',

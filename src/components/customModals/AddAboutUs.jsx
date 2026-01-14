@@ -36,7 +36,7 @@ const AddAboutUs = ({
 
     const fetchAboutUs = async () => {
         try {
-            const res = await axios.get('http://localhost:3000/api/aboutUs/get-aboutus');
+            const res = await axios.get('https://ba-dastoor-backend.onrender.com/api/aboutUs/get-aboutus');
             if (res.data?.data) {
                 setFormData({
                     heading: res?.data?.data?.heading || '',
@@ -103,7 +103,7 @@ const AddAboutUs = ({
         try {
             if (isEditMode) {
                 await axios.put(
-                    'http://localhost:3000/api/aboutUs/update-aboutus',
+                    'https://ba-dastoor-backend.onrender.com/api/aboutUs/update-aboutus',
                     data
                 );
                 toast.update(toastId, {
@@ -114,7 +114,7 @@ const AddAboutUs = ({
                 });
             } else {
                 await axios.post(
-                    'http://localhost:3000/api/aboutUs/create-aboutus',
+                    'https://ba-dastoor-backend.onrender.com/api/aboutUs/create-aboutus',
                     data
                 );
                 toast.update(toastId, {

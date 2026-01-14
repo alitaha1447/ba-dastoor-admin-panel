@@ -9,6 +9,10 @@ export const enquirySections = [
         id: 'career',
         name: 'Career Enquiry',
     },
+    {
+        id: 'franchise',
+        name: 'Franchise Enquiry',
+    },
     // {
     //     id: 'contact',
     //     name: 'Contact Enquiry',
@@ -29,6 +33,10 @@ export const SECTION_COLORS = {
         unselected: 'border-red-200 bg-red-25 hover:bg-red-50',
     },
     career: {
+        selected: 'border-blue-500 bg-blue-50 text-blue-700',
+        unselected: 'border-blue-200 bg-blue-25 hover:bg-blue-50',
+    },
+    franchise: {
         selected: 'border-blue-500 bg-blue-50 text-blue-700',
         unselected: 'border-blue-200 bg-blue-25 hover:bg-blue-50',
     },
@@ -60,8 +68,8 @@ const FormManagement = () => {
 
     // Get Enquiries
     const fetchEnquiries = async () => {
-        const res = await axios.get(`http://localhost:3000/api/enquirys/get-enquiry?enquiryType=${currentSection?.id}`)
-        // console.log(res?.data?.data)
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/enquirys/get-enquiry?enquiryType=${currentSection?.id}`)
+        console.log(res?.data?.data)
         setEnquiries(res?.data?.data)
     }
     useEffect(() => { fetchEnquiries() }, [currentSection?.id])
@@ -72,6 +80,20 @@ const FormManagement = () => {
         // Force download (works 100%)
         window.open(`${encodeURI(cvUrl)}?fl_attachment=true`, "_blank");
     };
+
+    // utils/formatDate.js
+    const formatDate = (dateInput) => {
+        if (!dateInput) return "";
+
+        const date = new Date(dateInput);
+
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+
+        return `${day}-${month}-${year}`;
+    };
+
 
 
     return (
@@ -128,6 +150,9 @@ const FormManagement = () => {
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
                                     Enquiry Type
                                 </th>
+                                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                                    Date
+                                </th>
 
                                 {/* {enquiry.enquiryType === "career" && ( */}
                                 {/* <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
@@ -165,6 +190,12 @@ const FormManagement = () => {
                                             <td className="px-6 py-4">
                                                 <div>
                                                     <p className="font-medium text-gray-900">{enquiry.enquiryType}</p>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div>
+                                                    <p className="font-medium text-gray-900">{formatDate(enquiry.
+                                                        createdAt)}</p>
                                                 </div>
                                             </td>
                                             {/* <td className="px-6 py-4">

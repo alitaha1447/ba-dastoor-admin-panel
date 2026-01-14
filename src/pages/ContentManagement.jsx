@@ -76,12 +76,18 @@ const ContentManagement = () => {
         // setSelectedPage(currentSection)
     }
 
+    const handleEdit = () => {
+        setShowContentModal(true)
+        setModalMode('edit')
+    }
+
     const fetchGeneralContent = async () => {
         try {
             setLoading(true);
 
             const res = await axios.get(
-                `http://localhost:3000/api/generalContent/get-content?page=${selectedSection}`
+                // `http://localhost:3000/api/generalContent/get-content?page=${selectedSection}`
+                `https://ba-dastoor-backend.onrender.com/api/generalContent/get-content?page=${selectedSection}`
             );
 
             setGeneralContent(res.data?.data || {});
@@ -139,6 +145,7 @@ const ContentManagement = () => {
         try {
 
             await axios.delete(`http://localhost:3000/api/generalContent/delete-content?page=${page}`);
+            await axios.delete(`https://ba-dastoor-backend.onrender.com/api/generalContent/delete-content?page=${page}`);
 
             toast.update(toastId, {
                 render: 'Content deleted successfully',
@@ -163,7 +170,7 @@ const ContentManagement = () => {
 
 
     const hasContent = generalContent && Object.keys(generalContent).length > 0;
-
+    console.log(hasContent)
     return (
         <div>
             <div className="mb-8">
@@ -207,13 +214,26 @@ const ContentManagement = () => {
                         <div className="w-full sm:flex-1">
                             <h2 className="text-xl font-bold text-gray-900">Add Content {currentSection.name}</h2>
                         </div>
-                        <button
-                            onClick={handleAdd}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-700 text-white font-medium rounded-lg hover: hover:bg-blue-800 transition-all duration-200 cursor-pointer"
-                        >
-                            <Plus className="w-5 h-5" />
-                            Add Banner
-                        </button>
+                        {
+                            hasContent ? (
+                                <button
+                                    onClick={handleEdit} style={{ width: '' }}
+                                    className="inline-flex max-w-fit items-center gap-2 px-4 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 text-white font-medium rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    Edit Content
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleAdd}
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-700 text-white font-medium rounded-lg hover: hover:bg-blue-800 transition-all duration-200 cursor-pointer"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    Add Content
+                                </button>
+                            )
+                        }
+
                     </div>
                 </div>
             </div>
@@ -245,7 +265,7 @@ const ContentManagement = () => {
                             </p>
 
                             {/* MEDIA */}
-                            {generalContent.mediaType === "image" ? (
+                            {/* {generalContent.mediaType === "image" ? (
                                 <img
                                     src={generalContent.media.url}
                                     alt="Media"
@@ -257,6 +277,21 @@ const ContentManagement = () => {
                                     controls
                                     className="w-full rounded-lg"
                                 />
+                            )} */}
+                            {generalContent?.media?.url && (
+                                generalContent.media.mediaType === "image" ? (
+                                    <img
+                                        src={generalContent.media.url}
+                                        alt="Media"
+                                        className="w-full rounded-lg"
+                                    />
+                                ) : (
+                                    <video
+                                        src={generalContent.media.url}
+                                        controls
+                                        className="w-full rounded-lg"
+                                    />
+                                )
                             )}
 
                             {/* DELETE BUTTON */}
@@ -284,6 +319,7 @@ const ContentManagement = () => {
                 closeModal={() => setShowContentModal(false)}
                 mode={modalMode} // 'add' or 'edit'
                 selectedSection={selectedSection}
+                selectedContent={generalContent}   // ✅ ADD THIS
                 // selectedContent={selectedContent}
                 refreshList={fetchGeneralContent} // Pass the refresh function
             />

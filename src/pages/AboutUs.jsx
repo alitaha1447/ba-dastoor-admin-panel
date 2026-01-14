@@ -27,7 +27,7 @@ const AboutUs = () => {
         try {
             setLoading(true);
             const res = await axios.get(
-                "http://localhost:3000/api/aboutUs/get-aboutus"
+                "https://ba-dastoor-backend.onrender.com/api/aboutUs/get-aboutus"
             );
 
             setAboutData(res?.data?.data || null);

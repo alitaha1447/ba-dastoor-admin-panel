@@ -132,7 +132,7 @@ const AddGalleryModal = ({ closeModal, refreshList, mode = 'add', selectedImg })
                 const id = selectedImg._id; // ✅ FIX
 
                 const res = await axios.put(
-                    `http://localhost:3000/api/newGalleryImg/new-edit-galleryImg/${id}`,
+                    `https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-edit-galleryImg/${id}`,
                     fd
                 );
                 toast.update(toastId, {
@@ -148,7 +148,7 @@ const AddGalleryModal = ({ closeModal, refreshList, mode = 'add', selectedImg })
                 // }
             }
             else {
-                const res = await axios.post(`http://localhost:3000/api/newGalleryImg/new-upload-galleryImg`, fd);
+                const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-upload-galleryImg`, fd);
                 toast.update(toastId, {
                     render: 'Photos uploaded successfully ✅',
                     type: 'success',

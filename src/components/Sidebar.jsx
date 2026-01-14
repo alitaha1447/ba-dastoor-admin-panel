@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router";
 import {
-    LayoutDashboard, Image, ChevronDown, ChevronRight, Menu, X, LogOut, FileText, Form, BriefcaseBusiness, GitBranch, ShieldHalf, User, SquareMenu, Footprints
+    Globe, LayoutDashboard, Image, ChevronDown, ChevronRight, Menu, X, LogOut, FileText, Form, BriefcaseBusiness, GitBranch, ShieldHalf, User, SquareMenu, Footprints
 } from "lucide-react";
 
 import logo from "../assets/Ba-Dastoor_Logo_-22Shabbir_Hussain_1-removebg-preview.png"
@@ -115,6 +115,13 @@ const Sidebar = () => {
         },
         {
             id: 11,
+            name: "SEO ",
+            layout: "/admin",
+            path: "/seo",
+            icon: Globe,
+        },
+        {
+            id: 12,
             name: "Footer ",
             layout: "/admin",
             path: "/footer",

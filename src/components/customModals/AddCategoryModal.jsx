@@ -45,7 +45,7 @@ const AddCategoryModal = ({ closeModal, mode, selectedCategory, refetch }) => {
         try {
             if (isEditMode) {
 
-                await axios.put(`http://localhost:3000/api/categories/upate-category/${id}`, payload)
+                await axios.put(`https://ba-dastoor-backend.onrender.com/api/categories/upate-category/${id}`, payload)
                 toast.update(toastId, {
                     render: 'Category updated successfully ✅',
                     type: 'success',
@@ -53,7 +53,7 @@ const AddCategoryModal = ({ closeModal, mode, selectedCategory, refetch }) => {
                     autoClose: 2000,
                 });
             } else {
-                await axios.post(`http://localhost:3000/api/categories/create-category`, payload)
+                await axios.post(`https://ba-dastoor-backend.onrender.com/api/categories/create-category`, payload)
                 toast.update(toastId, {
                     render: 'Category created successfully ✅',
                     type: 'success',

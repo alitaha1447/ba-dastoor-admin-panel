@@ -75,7 +75,7 @@ const AddJobModal = ({ isModalOpen, closeModal, mode = 'add', selectedJob, refre
         try {
             if (isEditMode && selectedJob) {
                 const response = await axios.put(
-                    `http://localhost:3000/api/jobs/edit-job/${selectedJob._id}`,
+                    `https://ba-dastoor-backend.onrender.com/api/jobs/edit-job/${selectedJob._id}`,
                     payload
                 );
                 toast.update(toastId, {
@@ -93,7 +93,7 @@ const AddJobModal = ({ isModalOpen, closeModal, mode = 'add', selectedJob, refre
                 //     closeModal();
                 // }
             } else {
-                const response = await axios.post("http://localhost:3000/api/jobs/create-jobs", payload);
+                const response = await axios.post("https://ba-dastoor-backend.onrender.com/api/jobs/create-jobs", payload);
                 toast.update(toastId, {
                     render: 'Job created successfully ✅',
                     type: 'success',

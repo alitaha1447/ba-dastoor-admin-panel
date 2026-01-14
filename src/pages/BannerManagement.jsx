@@ -21,12 +21,12 @@ const BannerManagement = () => {
             name: 'Careers',
         },
         {
-            id: 'services',
-            name: 'Services',
+            id: 'gallery',
+            name: 'Gallery',
         },
         {
-            id: 'contact',
-            name: 'Contact Us',
+            id: 'catering',
+            name: 'Catering',
         },
     ];
     // Color mapping for Tailwind CSS classes
@@ -43,11 +43,11 @@ const BannerManagement = () => {
             selected: 'border-purple-500 bg-purple-50 text-purple-700',
             unselected: 'border-purple-200 bg-purple-25 hover:bg-purple-50',
         },
-        services: {
+        gallery: {
             selected: 'border-green-500 bg-green-50 text-green-700',
             unselected: 'border-green-200 bg-green-25 hover:bg-green-50',
         },
-        contact: {
+        catering: {
             selected: 'border-orange-500 bg-orange-50 text-orange-700',
             unselected: 'border-orange-200 bg-orange-25 hover:bg-orange-50',
         },
@@ -65,6 +65,11 @@ const BannerManagement = () => {
     const [mobileBanners, setMobileBanners] = useState([])
 
     const [selectedDesktopBanners, setSelectedDesktopBanners] = useState([]);
+    const [loadingBannerId, setLoadingBannerId] = useState(null);
+
+    const [selectedMobileBanners, setSelectedMobileBanners] = useState([])
+    const [loadingMobileBannerId, setLoadingMobileBannerId] = useState(null);
+
 
     const [savedBanners, setSavedBanners] = useState({
         desktop: null,
@@ -76,7 +81,7 @@ const BannerManagement = () => {
 
     const fetchDesktopBanners = async () => {
 
-        const res = await axios.get(`http://localhost:3000/api/banners/get-desktopBanner?page=${currentSection?.id}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${currentSection?.id}`);
         console.log(res?.data?.data)
         setDesktopBanners(res?.data?.data)
         const preSelectedIds = res?.data?.data
@@ -92,9 +97,15 @@ const BannerManagement = () => {
     }, [currentSection?.id]);
 
     const fetchMobileBanners = async () => {
-        const res = await axios.get(`http://localhost:3000/api/banners/mobile/get-mobileBanner?page=${currentSection?.id}`);
+        const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${currentSection?.id}`);
         console.log(res?.data?.data)
         setMobileBanners(res?.data?.data)
+        const preSelectedIds = res?.data?.data
+            .filter(banner => banner.isSelected === true)
+            .map(banner => banner._id);
+        console.log(preSelectedIds)
+
+        setSelectedMobileBanners(preSelectedIds);
     }
 
     useEffect(() => {
@@ -164,6 +175,7 @@ const BannerManagement = () => {
             setIsUploading(false)
             return;
         }
+        const toastId = toast.loading('Uploading Desktop Banner...');
 
         try {
             const formData = new FormData();
@@ -190,7 +202,7 @@ const BannerManagement = () => {
                 }
             }
 
-            const res = await axios.post(`http://localhost:3000/api/banners/upload-desktopBanner?page=${currentSection?.id}`,
+            const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/banners/upload-desktopBanner?page=${currentSection?.id}`,
                 formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -204,6 +216,12 @@ const BannerManagement = () => {
 
         } catch (error) {
             console.log('Error while uploading banner --> ', error)
+            toast.update(toastId, {
+                render: error?.response?.data?.message,
+                type: 'error',
+                isLoading: false,
+                autoClose: 2000,
+            });
         } finally {
             setIsUploading(false)
         }
@@ -217,6 +235,8 @@ const BannerManagement = () => {
             setIsUploading(false)
             return;
         }
+        const toastId = toast.loading('Uploading Mobile Banner...');
+
         try {
             const formData = new FormData();
             if (savedBanners.mobile) {
@@ -242,7 +262,7 @@ const BannerManagement = () => {
                 }
             }
 
-            const res = await axios.post(`http://localhost:3000/api/banners/mobile/upload-mobileBanner?page=${currentSection?.id}`,
+            const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/upload-mobileBanner?page=${currentSection?.id}`,
                 formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -253,10 +273,24 @@ const BannerManagement = () => {
             // fetchBanners()
             // handleResetBanners()
             fetchMobileBanners()
-            alert("Uploaded successfully");
+            // ✅ SUCCESS TOAST UPDATE
+            toast.update(toastId, {
+                render: "Mobile banner uploaded successfully ✅",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+            });
+            // alert("Uploaded successfully");
 
         } catch (error) {
             console.log('Error while uploading mobile banner --> ', error)
+            console.log('Error while uploading mobile banner --> ', error)
+            toast.update(toastId, {
+                render: error?.response?.data?.message,
+                type: 'error',
+                isLoading: false,
+                autoClose: 2000,
+            });
 
         } finally {
             setIsMobileUploading(false)
@@ -276,7 +310,7 @@ const BannerManagement = () => {
     const handleDeleteDesktopBanner = async (id) => {
         console.log(id)
         try {
-            const res = await axios.delete(`http://localhost:3000/api/banners/delete-desktopBanner/${id}`);
+            const res = await axios.delete(`https://ba-dastoor-backend.onrender.com/api/banners/delete-desktopBanner/${id}`);
             console.log(res);
             fetchDesktopBanners()
             alert("Banner deleted successfully");
@@ -289,7 +323,7 @@ const BannerManagement = () => {
     const handleDeleteMobileBanner = async (id) => {
         console.log(id)
         try {
-            const res = await axios.delete(`http://localhost:3000/api/banners/mobile/delete-mobileBanner/${id}`);
+            const res = await axios.delete(`https://ba-dastoor-backend.onrender.com/api/banners/mobile/delete-mobileBanner/${id}`);
             console.log(res);
             fetchMobileBanners()
             alert("Banner deleted successfully");
@@ -298,56 +332,160 @@ const BannerManagement = () => {
         }
     }
 
-    // console.log(banners)
 
-    // selected banners
-    const toggleSelectOne = (id) => {
+    // selected desktop banners
+    const toggleSelectDesktopBanner = async (id) => {
+        setLoadingBannerId(id)
+        const isCurrentlySelected = selectedDesktopBanners.includes(id);
+        const nextState = !isCurrentlySelected;
+
+        // ✅ Update UI instantly
         setSelectedDesktopBanners(prev =>
             prev.includes(id)
                 ? prev.filter(item => item !== id)
                 : [...prev, id]
         );
-    };
-    console.log(selectedDesktopBanners)
-
-    const handleUpdateSelectedDesktopBanners = async (isSelected) => {
-        console.log(isSelected)
-        if (selectedDesktopBanners.length === 0) {
-            alert("Please select at least one banner");
-            return;
-        }
 
         const toastId = toast.loading(
-            'Updating Banner...'
+            nextState ? "Showing banner on home..." : "Removing banner from home..."
         );
-
         try {
-            const res = await axios.patch(
-                "http://localhost:3000/api/banners/patch-desktopBanner",
+            await axios.patch(
+                "https://ba-dastoor-backend.onrender.com/api/banners/patch-desktopBanner",
                 {
-                    ids: selectedDesktopBanners,
-                    isSelected: isSelected,
+                    ids: [id],
+                    isSelected: nextState,
                 }
+            );
+            toast.update(toastId, {
+                render: "Banner updated successfully ✅",
+                type: "success",
+                isLoading: false,
+                autoClose: 1500,
+            });
+        } catch (error) {
+            console.error(error);
+            // ❌ Rollback UI on failure
+            setSelectedDesktopBanners(prev =>
+                nextState
+                    ? prev.filter(item => item !== id)
+                    : [...prev, id]
             );
 
             toast.update(toastId, {
-                render: 'Banners updated successfully ✅',
-                type: 'success',
+                render: "Failed to update banner ❌",
+                type: "error",
                 isLoading: false,
                 autoClose: 2000,
             });
-
-            // console.log("Selection updated:", res.data);
-            // refetch
-            fetchDesktopBanners();
-            // 🧹 Clear selection after success
-            setSelectedDesktopBanners([]);
-
-        } catch (error) {
-            console.error("Error updating selection:", error);
-            alert("Failed to update banner selection");
+        } finally {
+            setLoadingBannerId(null)
         }
-    }
+    };
+
+    // selected mobile banners
+    const toggleSelectMobileBanner = async (id) => {
+        setLoadingMobileBannerId(id)
+        const isCurrentlySelected = selectedMobileBanners.includes(id);
+        const nextState = !isCurrentlySelected;
+
+        // ✅ Update UI instantly
+        setSelectedMobileBanners(prev =>
+            prev.includes(id)
+                ? prev.filter(item => item !== id)
+                : [...prev, id]
+        );
+
+        const toastId = toast.loading(
+            nextState ? "Showing banner on home..." : "Removing banner from home..."
+        );
+        try {
+            await axios.patch(
+                "https://ba-dastoor-backend.onrender.com/api/banners/mobile/patch-mobileBanner",
+                {
+                    ids: [id],
+                    isSelected: nextState,
+                }
+            );
+            toast.update(toastId, {
+                render: "Banner updated successfully ✅",
+                type: "success",
+                isLoading: false,
+                autoClose: 1500,
+            });
+        } catch (error) {
+            console.error(error);
+            // ❌ Rollback UI on failure
+            setSelectedDesktopBanners(prev =>
+                nextState
+                    ? prev.filter(item => item !== id)
+                    : [...prev, id]
+            );
+
+            toast.update(toastId, {
+                render: "Failed to update banner ❌",
+                type: "error",
+                isLoading: false,
+                autoClose: 2000,
+            });
+        } finally {
+            setLoadingMobileBannerId(null)
+        }
+    };
+
+    // const handleUpdateSelectedDesktopBanners = async (isSelected) => {
+    //     console.log(isSelected)
+    //     if (selectedDesktopBanners.length === 0) {
+    //         alert("Please select at least one banner");
+    //         return;
+    //     }
+
+    //     const toastId = toast.loading(
+    //         'Updating Banner...'
+    //     );
+
+    //     try {
+    //         const res = await axios.patch(
+    //             "http://localhost:3000/api/banners/patch-desktopBanner",
+    //             {
+    //                 ids: selectedDesktopBanners,
+    //                 isSelected: isSelected,
+    //             }
+    //         );
+
+    //         toast.update(toastId, {
+    //             render: 'Banners updated successfully ✅',
+    //             type: 'success',
+    //             isLoading: false,
+    //             autoClose: 2000,
+    //         });
+
+    //         // console.log("Selection updated:", res.data);
+    //         // refetch
+    //         fetchDesktopBanners();
+    //         // 🧹 Clear selection after success
+    //         setSelectedDesktopBanners([]);
+
+    //     } catch (error) {
+    //         console.error("Error updating selection:", error);
+    //         alert("Failed to update banner selection");
+    //     }
+    // }
+
+    // const handleToggleDesktopBanner = async (id, currentState) => {
+    //     console.log(id, currentState);
+    //     const nextState = !currentState;
+
+    //     // ✅ Optimistic UI update (THIS fixes checkbox)
+    //     setSelectedDesktopBanners(prev =>
+    //         prev.map(banner =>
+    //             banner._id === id
+    //                 ? { ...banner, isSelected: nextState }
+    //                 : banner
+    //         )
+    //     );
+    // }
+
 
     return (
         <div className="">
@@ -677,11 +815,18 @@ const BannerManagement = () => {
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3">
-                                                <input
+                                                {/* <input
                                                     type="checkbox"
                                                     checked={selectedDesktopBanners.includes(banner._id)}
                                                     onChange={() => toggleSelectOne(banner._id)}
                                                     className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                /> */}
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedDesktopBanners.includes(banner._id)}
+                                                    onChange={() => toggleSelectDesktopBanner(banner._id)}
+                                                    disabled={loadingBannerId === banner._id}
+                                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                                                 />
                                             </td>
                                         </tr>
@@ -697,7 +842,7 @@ const BannerManagement = () => {
                                     </tr>
                                 )}
                             </tbody>
-                            <div className="flex gap-2 mt-2 mb-2">
+                            {/* <div className="flex gap-2 mt-2 mb-2">
                                 <button
                                     onClick={() => handleUpdateSelectedDesktopBanners(true)}
                                     disabled={selectedDesktopBanners.length === 0}
@@ -713,7 +858,7 @@ const BannerManagement = () => {
                                 >
                                     Remove from Home
                                 </button>
-                            </div>
+                            </div> */}
 
                         </table>
                     </div>
@@ -771,10 +916,18 @@ const BannerManagement = () => {
                                             <td className="px-4 py-3">
                                                 <input
                                                     type="checkbox"
-                                                    // checked={selectedBanners.includes(banner._id)}
-                                                    // /    onChange={() => toggleSelectOne(banner._id)}
-                                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                    checked={selectedMobileBanners.includes(banner._id)}
+                                                    onChange={() => toggleSelectMobileBanner(banner._id)}
+                                                    disabled={loadingMobileBannerId === banner._id}
+                                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                                                 />
+
+                                                {/* type="checkbox"
+                                                checked={selectedDesktopBanners.includes(banner._id)}
+                                                onChange={() => toggleSelectDesktopBanner(banner._id)}
+                                                disabled={loadingBannerId === banner._id}
+                                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" */}
+
                                             </td>
 
                                         </tr>

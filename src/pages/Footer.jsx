@@ -35,7 +35,7 @@ const Footer = () => {
 
     const fetchSocialLinks = async () => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/socialLinks/get-socialLinks`)
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/socialLinks/get-socialLinks`)
 
             setSocials(res?.data?.data)
         } catch (error) {
@@ -48,7 +48,7 @@ const Footer = () => {
     const handleDelete = async (id) => {
         console.log(id)
         try {
-            const res = await axios.delete(`http://localhost:3000/api/socialLinks/delete-socialLinks/${id}`)
+            const res = await axios.delete(`https://ba-dastoor-backend.onrender.com/socialLinks/delete-socialLinks/${id}`)
             if (res) {
                 fetchSocialLinks()
             }

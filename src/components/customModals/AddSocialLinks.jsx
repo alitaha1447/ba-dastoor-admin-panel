@@ -52,7 +52,7 @@ const AddSocialLinks = ({ isModalOpen, closeModal, mode = 'add', selectedLinks, 
         try {
             if (isEditMode) {
                 const res = await axios.put(
-                    "http://localhost:3000/api/socialLinks/update-socialLinks",
+                    "https://ba-dastoor-backend.onrender.com/api/socialLinks/update-socialLinks",
                     socialLinks
                 );
 
@@ -69,7 +69,7 @@ const AddSocialLinks = ({ isModalOpen, closeModal, mode = 'add', selectedLinks, 
                     closeModal(); // Close modal after successful operation
                 }
             } else {
-                const res = await axios.post(`http://localhost:3000/api/socialLinks/create-socialLinks`, socialLinks);
+                const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/socialLinks/create-socialLinks`, socialLinks);
                 console.log(res)
                 if (res) {
                     // Show success message

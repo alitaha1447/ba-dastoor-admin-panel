@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { X, ImageIcon, Monitor, Save } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 
-const AddContent = ({ isModalOpen, closeModal, mode = 'add', selectedSection, refreshList }) => {
-
-    const [isEditMode, setIsEditMode] = useState(mode === 'edit');
+const AddContent = ({ isModalOpen, closeModal, mode = 'add', selectedContent, selectedSection, refreshList }) => {
+    console.log(selectedContent)
+    // const [isEditMode, setIsEditMode] = useState(mode === 'edit');
     const [loading, setLoading] = useState(false);
+    const isEditMode = mode === 'edit';
 
 
     const [formData, setFormData] = useState({
@@ -18,6 +19,36 @@ const AddContent = ({ isModalOpen, closeModal, mode = 'add', selectedSection, re
         logo: null,
         media: null,
     });
+
+    /* =========================
+ FETCH EXISTING ABOUT US
+========================= */
+
+    useEffect(() => {
+        if (!isModalOpen) return;
+
+        if (mode === 'edit' && selectedContent && Object.keys(selectedContent).length) {
+            setFormData({
+                heading: selectedContent.heading ?? '',
+                description: selectedContent.description ?? '',
+                mediaType: selectedContent.mediaType ?? 'image',
+                logo: null,   // cannot prefill files
+                media: null,
+            });
+        }
+
+        if (mode === 'add') {
+            setFormData({
+                heading: '',
+                description: '',
+                mediaType: 'image',
+                logo: null,
+                media: null,
+            });
+        }
+    }, [mode, selectedContent, isModalOpen]);
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,18 +61,114 @@ const AddContent = ({ isModalOpen, closeModal, mode = 'add', selectedSection, re
     };
 
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     // if (!formData.media) {
+    //     //     alert("Media file is required");
+    //     //     return;
+    //     // }
+
+    //     const toastId = toast.loading(
+    //         isEditMode ? 'Updating Content...' : 'Saving Content...'
+    //     );
+
+
+    //     try {
+    //         setLoading(true);
+
+    //         /* ========= CREATE FORMDATA ========= */
+    //         const data = new FormData();
+    //         data.append("heading", formData.heading);
+    //         data.append("description", formData.description);
+    //         data.append("mediaType", formData.mediaType);
+    //         // send mediaType only if media exists
+    //         if (formData.media) {
+    //             data.append("mediaType", formData.mediaType);
+    //             data.append("media", formData.media);
+    //         }
+
+    //         // logo optional
+    //         if (formData.logo) {
+    //             data.append("logo", formData.logo);
+    //         }
+
+
+    //         /* ========= API CALL ========= */
+    //         if (isEditMode && selectedContent) {
+    //             await axios.put(
+    //                 `http://localhost:3000/api/generalContent/update-content?page=${selectedSection}`,
+    //                 data,
+    //                 {
+    //                     headers: {
+    //                         "Content-Type": "multipart/form-data",
+    //                     },
+    //                 }
+    //             );
+    //             toast.update(toastId, {
+    //                 render: 'Content updated successfully ✅',
+    //                 type: 'success',
+    //                 isLoading: false,
+    //                 autoClose: 3000,
+    //             });
+    //         } else {
+    //             await axios.post(
+    //                 `http://localhost:3000/api/generalContent/upload-content?page=${selectedSection}`,
+    //                 data,
+    //                 {
+    //                     headers: {
+    //                         "Content-Type": "multipart/form-data",
+    //                     },
+    //                 }
+    //             );
+
+    //             toast.update(toastId, {
+    //                 render: 'Content created successfully 🎉',
+    //                 type: 'success',
+    //                 isLoading: false,
+    //                 autoClose: 3000,
+    //             });
+    //         }
+    //         // const res = await axios.post(
+    //         //     `http://localhost:3000/api/generalContent/upload-content?page=${selectedSection}`,
+    //         //     data,
+    //         //     {
+    //         //         headers: {
+    //         //             "Content-Type": "multipart/form-data",
+    //         //         },
+    //         //     }
+    //         // );
+    //         // toast.update(toastId, {
+    //         //     render: 'Content added successfully ✅',
+    //         //     type: 'success',
+    //         //     isLoading: false,
+    //         //     autoClose: 2000,
+    //         // });
+
+    //         // console.log("✅ Upload success:", res.data);
+    //         refreshList?.()
+    //         closeModal();
+    //     } catch (error) {
+    //         // console.error("❌ Upload failed:", error.response?.data || error.message);
+    //         // alert(error.response?.data?.message || "Upload failed");
+    //         toast.update(toastId, {
+    //             render:
+    //                 error?.response?.data?.message,
+    //             type: 'error',
+    //             isLoading: false,
+    //             autoClose: 3000,
+    //         });
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!formData.media) {
-            alert("Media file is required");
-            return;
-        }
 
         const toastId = toast.loading(
             isEditMode ? 'Updating Content...' : 'Saving Content...'
         );
-
 
         try {
             setLoading(true);
@@ -50,39 +177,55 @@ const AddContent = ({ isModalOpen, closeModal, mode = 'add', selectedSection, re
             const data = new FormData();
             data.append("heading", formData.heading);
             data.append("description", formData.description);
-            data.append("mediaType", formData.mediaType);
-            data.append("media", formData.media); // REQUIRED
 
+            // append media ONLY if selected
+            if (formData.media) {
+                data.append("mediaType", formData.mediaType);
+                data.append("media", formData.media);
+            }
+
+            // append logo ONLY if selected
             if (formData.logo) {
-                data.append("logo", formData.logo); // OPTIONAL
+                data.append("logo", formData.logo);
             }
 
             /* ========= API CALL ========= */
-            const res = await axios.post(
-                `http://localhost:3000/api/generalContent/upload-content?page=${selectedSection}`,
-                data,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-            toast.update(toastId, {
-                render: 'Content added successfully ✅',
-                type: 'success',
-                isLoading: false,
-                autoClose: 2000,
-            });
+            if (isEditMode && selectedContent) {
+                await axios.put(
+                    // `http://localhost:3000/api/generalContent/update-content?page=${selectedSection}`,
+                    `https://ba-dastoor-backend.onrender.com/api/generalContent/update-content?page=${selectedSection}`,
+                    data,
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
 
-            // console.log("✅ Upload success:", res.data);
-            refreshList?.()
+                toast.update(toastId, {
+                    render: 'Content updated successfully ✅',
+                    type: 'success',
+                    isLoading: false,
+                    autoClose: 3000,
+                });
+            } else {
+                await axios.post(
+                    // `http://localhost:3000/api/generalContent/upload-content?page=${selectedSection}`,
+                    `https://ba-dastoor-backend.onrender.com/api/generalContent/upload-content?page=${selectedSection}`,
+                    data,
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
+
+                toast.update(toastId, {
+                    render: 'Content created successfully 🎉',
+                    type: 'success',
+                    isLoading: false,
+                    autoClose: 3000,
+                });
+            }
+
+            refreshList?.();
             closeModal();
+
         } catch (error) {
-            // console.error("❌ Upload failed:", error.response?.data || error.message);
-            // alert(error.response?.data?.message || "Upload failed");
             toast.update(toastId, {
-                render:
-                    error?.response?.data?.message,
+                render: error?.response?.data?.message || "Something went wrong",
                 type: 'error',
                 isLoading: false,
                 autoClose: 3000,
@@ -91,7 +234,6 @@ const AddContent = ({ isModalOpen, closeModal, mode = 'add', selectedSection, re
             setLoading(false);
         }
     };
-
 
 
     if (!isModalOpen) return null;
@@ -208,7 +350,7 @@ const AddContent = ({ isModalOpen, closeModal, mode = 'add', selectedSection, re
                        file:rounded-lg file:border-0
                        file:bg-green-50 file:text-green-700
                        hover:file:bg-green-100"
-                            required
+
                         />
                     </div>
 

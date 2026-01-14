@@ -102,7 +102,7 @@ const AddBranchModal = ({ isModalOpen, closeModal, mode = 'add', selectedJob, re
             if (isEditMode && selectedJob) {
 
                 const id = selectedJob?._id;
-                const res = await axios.put(`http://localhost:3000/api/branches/edit-branches/${id}`, fd);
+                const res = await axios.put(`https://ba-dastoor-backend.onrender.com/api/branches/edit-branches/${id}`, fd);
                 toast.update(toastId, {
                     render: 'Branch updated successfully ✅',
                     type: 'success',
@@ -125,7 +125,7 @@ const AddBranchModal = ({ isModalOpen, closeModal, mode = 'add', selectedJob, re
                 // closeModal()
 
             } else {
-                const res = await axios.post(`http://localhost:3000/api/branches/create-branch`, fd);
+                const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/branches/create-branch`, fd);
                 toast.update(toastId, {
                     render: 'Branch added successfully ✅',
                     type: 'success',

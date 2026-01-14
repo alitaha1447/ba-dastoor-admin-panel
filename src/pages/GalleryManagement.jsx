@@ -42,7 +42,7 @@ const GalleryManagement = () => {
     const fetchGalleyImg = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:3000/api/newGalleryImg/new-get-galleryImg"
+                "https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImg"
             );
             setGalleryImg(res?.data?.data || []);
         } catch (error) {
@@ -53,7 +53,7 @@ const GalleryManagement = () => {
     const fetchGalleryVideo = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:3000/api/newGalleryVideo/new-get-galleryVideo"
+                "https://ba-dastoor-backend.onrender.com/api/newGalleryVideo/new-get-galleryVideo"
             );
             setGalleryVideo(res?.data?.data || []);
         } catch (error) {
@@ -138,7 +138,7 @@ const GalleryManagement = () => {
             // setDeleteLoading(true);
 
             await axios.delete(
-                `http://localhost:3000/api/newGalleryImg/new-delete-galleryImg/${id}`
+                `https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-delete-galleryImg/${id}`
             );
             toast.update(toastId, {
                 render: 'Photos deleted successfully',

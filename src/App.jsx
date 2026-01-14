@@ -60,6 +60,7 @@ import Review from './pages/Review';
 import Footer from './pages/Footer';
 import AboutUs from './pages/AboutUs';
 import ContentManagement from './pages/ContentManagement';
+import Seo from './pages/Seo';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -105,6 +106,7 @@ function App() {
               <Route path="footer" element={<Footer />} />
               <Route path="about" element={<AboutUs />} />
               <Route path="content" element={<ContentManagement />} />
+              <Route path="seo" element={<Seo />} />
 
               {/* Add all other admin routes here */}
               <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />

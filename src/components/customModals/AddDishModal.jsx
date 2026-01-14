@@ -71,7 +71,7 @@ const AddDishModal = ({ mode = 'add', closeModal, selectedCategory, selectedDish
         try {
             if (isEditMode && id) {
                 await axios.put(
-                    `http://localhost:3000/api/dishes/update-dish/${id}`,
+                    `https://ba-dastoor-backend.onrender.com/api/dishes/update-dish/${id}`,
                     payload
                 );
                 toast.update(toastId, {
@@ -82,7 +82,7 @@ const AddDishModal = ({ mode = 'add', closeModal, selectedCategory, selectedDish
                 });
             } else {
                 await axios.post(
-                    `http://localhost:3000/api/dishes/create-dish/${categoryId}`,
+                    `https://ba-dastoor-backend.onrender.com/api/dishes/create-dish/${categoryId}`,
                     payload
                 );
                 toast.update(toastId, {

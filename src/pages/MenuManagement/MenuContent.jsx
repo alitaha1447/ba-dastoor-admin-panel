@@ -47,7 +47,7 @@ const MenuContent = () => {
 
     const fetchContent = async () => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/content/get-content`);
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/content/get-content`);
             setContent(res?.data?.data)
         } catch (error) {
             console.log(error)
@@ -55,7 +55,7 @@ const MenuContent = () => {
     }
     const fetchCategory = async () => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/categories/get-categories`);
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/categories/get-categories`);
             setCategories(res?.data?.data)
         } catch (error) {
             console.log(error)
@@ -90,7 +90,7 @@ const MenuContent = () => {
 
     const fetchDishesByCategory = async (categoryId) => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/dishes/get-dish/${categoryId}`);
+            const res = await axios.get(`https://ba-dastoor-backend.onrender.com/api/dishes/get-dish/${categoryId}`);
             setDishes(res?.data?.data)
         } catch (error) {
             console.log(error)
@@ -179,7 +179,7 @@ const MenuContent = () => {
 
         try {
             await axios.delete(
-                `http://localhost:3000/api/content/delete-content`
+                `https://ba-dastoor-backend.onrender.com/api/content/delete-content`
             );
 
             toast.update(toastId, {
@@ -265,7 +265,7 @@ const MenuContent = () => {
             setDeleteLoading(true);
 
             await axios.delete(
-                `http://localhost:3000/api/dishes/delete-dish/${id}`
+                `https://ba-dastoor-backend.onrender.com/api/dishes/delete-dish/${id}`
             );
 
             toast.update(toastId, {

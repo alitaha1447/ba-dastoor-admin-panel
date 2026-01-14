@@ -53,7 +53,7 @@ const AddMenuModal = ({ isModalOpen, closeModal, mode = 'add', selectedContent, 
         );
         try {
             if (isEditMode && selectedContent) {
-                const res = await axios.put(`http://localhost:3000/api/content/update-content`, formData);
+                const res = await axios.put(`https://ba-dastoor-backend.onrender.com/api/content/update-content`, formData);
                 toast.update(toastId, {
                     render: 'Content updated successfully ✅',
                     type: 'success',
@@ -62,7 +62,7 @@ const AddMenuModal = ({ isModalOpen, closeModal, mode = 'add', selectedContent, 
                 });
 
             } else {
-                const res = await axios.post(`http://localhost:3000/api/content/create-content`, formData);
+                const res = await axios.post(`https://ba-dastoor-backend.onrender.com/api/content/create-content`, formData);
                 toast.update(toastId, {
                     render: 'Content created successfully 🎉',
                     type: 'success',
