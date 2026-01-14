@@ -28,6 +28,10 @@ const BannerManagement = () => {
             id: 'catering',
             name: 'Catering',
         },
+        {
+            id: 'franchise',
+            name: 'Franchise',
+        },
     ];
     // Color mapping for Tailwind CSS classes
     const SECTION_COLORS = {
@@ -48,6 +52,10 @@ const BannerManagement = () => {
             unselected: 'border-green-200 bg-green-25 hover:bg-green-50',
         },
         catering: {
+            selected: 'border-orange-500 bg-orange-50 text-orange-700',
+            unselected: 'border-orange-200 bg-orange-25 hover:bg-orange-50',
+        },
+        franchise: {
             selected: 'border-orange-500 bg-orange-50 text-orange-700',
             unselected: 'border-orange-200 bg-orange-25 hover:bg-orange-50',
         },
@@ -212,7 +220,13 @@ const BannerManagement = () => {
             console.log(res);
             // handleResetBanners()
             fetchDesktopBanners()
-            alert("Uploaded successfully");
+            // alert("Uploaded successfully");
+            toast.update(toastId, {
+                render: "Mobile banner uploaded successfully ✅",
+                type: "success",
+                isLoading: false,
+                autoClose: 2000,
+            });
 
         } catch (error) {
             console.log('Error while uploading banner --> ', error)
@@ -486,7 +500,7 @@ const BannerManagement = () => {
     //     );
     // }
 
-
+    console.log(selectedSection)
     return (
         <div className="">
             {/* Header */}

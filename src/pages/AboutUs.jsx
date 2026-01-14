@@ -116,7 +116,13 @@ const AboutUs = () => {
                         {/* About Us Section */}
                         <div className="border-t pt-4">
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                About Heading
+                            </h3>
+                            <p className="text-gray-700 leading-relaxed">
                                 {aboutData.aboutUsHeading}
+                            </p>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                About Us Para
                             </h3>
                             <p className="text-gray-700 leading-relaxed">
                                 {aboutData.aboutUsPara}

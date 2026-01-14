@@ -119,7 +119,7 @@ const BranchManagement = () => {
             </div>
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[900px]">
                         <thead className="bg-gray-50 border-b border-gray-200">
                             <tr>
                                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
@@ -144,7 +144,7 @@ const BranchManagement = () => {
                             {branches.map((branch) => (
                                 <tr key={branch._id} className="hover:bg-gray-50 transition-colors">
 
-                                    <td className="px-6 py-4">
+                                    {/* <td className="px-6 py-4">
                                         <div className="flex items-center">
                                             {branch.images.slice(0, 3).map((img, index) => (
                                                 <img
@@ -156,7 +156,21 @@ const BranchManagement = () => {
                                                 />
                                             ))}
                                         </div>
+                                    </td> */}
+                                    <td className="px-4 py-4 w-[160px]">
+                                        <div className="flex flex-row items-center gap-2">
+                                            {branch.images.slice(0, 3).map((img) => (
+                                                <img
+                                                    key={img._id}
+                                                    src={img.url}
+                                                    alt={branch.branchName}
+                                                    className="w-12 h-12 rounded-md object-cover border border-gray-200"
+                                                />
+                                            ))}
+                                        </div>
                                     </td>
+
+
                                     <td className="px-6 py-4">
                                         <div>
                                             <p className="font-medium text-gray-900">{branch.branchName}</p>
