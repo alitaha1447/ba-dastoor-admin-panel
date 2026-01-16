@@ -321,7 +321,7 @@ const BannerManagement = () => {
         isLoading: false,
         autoClose: 2000,
       });
-      await fetchDesktopBanners();
+      await fetchMobileBanners();
       handleResetBanners();
       // alert("Uploaded successfully");
     } catch (error) {
