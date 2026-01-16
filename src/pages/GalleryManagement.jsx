@@ -52,6 +52,7 @@ const GalleryManagement = () => {
         // "http://localhost:3000/api/newGalleryImg/new-get-galleryImgAdmin"
         "https://ba-dastoor-backend.onrender.com/api/newGalleryImg/new-get-galleryImgAdmin"
       );
+      console.log(res);
       setGalleryImg(res?.data?.data || []);
     } catch (error) {
       console.log(error);
@@ -407,11 +408,11 @@ const GalleryManagement = () => {
                           <button
                             onClick={() => handleDelete(item._id)}
                             disabled={deletingId === item._id}
-                            className={`p-2 rounded-lg transition-all
+                            className={`p-2 rounded-lg transition-all cursor-pointer
         ${
           deletingId === item._id
             ? "text-gray-400 cursor-not-allowed"
-            : "text-red-600 hover:bg-red-50"
+            : "text-red-600 hover:bg-red-50 cursor-pointer"
         }
     `}
                             title="Delete"

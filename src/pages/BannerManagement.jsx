@@ -339,30 +339,125 @@ const BannerManagement = () => {
   // Delete banners
   const handleDeleteDesktopBanner = async (id) => {
     console.log(id);
+    toast.warning(
+      ({ closeToast }) => (
+        <div>
+          <p className="font-medium mb-3">
+            Are you sure you want to delete this content?
+          </p>
+
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={closeToast}
+              className="px-3 py-1 border rounded-md text-sm"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={() => confirmDelete(id, closeToast)}
+              className="px-3 py-1 bg-red-600 text-white rounded-md text-sm"
+            >
+              Yes, Delete
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        autoClose: false,
+        closeOnClick: false,
+      }
+    );
+  };
+  const confirmDelete = async (id, closeToast) => {
+    closeToast(); // close confirmation toast
+
+    const toastId = toast.loading("Deleting Banner...");
+
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `https://ba-dastoor-backend.onrender.com/api/banners/delete-desktopBanner/${id}`
       );
-      console.log(res);
-      fetchDesktopBanners();
-      alert("Banner deleted successfully");
+
+      toast.update(toastId, {
+        render: "Banner deleted successfully 🗑️",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+
+      await fetchDesktopBanners();
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      toast.update(toastId, {
+        render: error?.response?.data?.message || "Failed to delete banner ❌",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
   };
 
   // Mobile banners
   const handleDeleteMobileBanner = async (id) => {
     console.log(id);
+    toast.warning(
+      ({ closeToast }) => (
+        <div>
+          <p className="font-medium mb-3">
+            Are you sure you want to delete this content?
+          </p>
+
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={closeToast}
+              className="px-3 py-1 border rounded-md text-sm"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={() => confirmMobileDelete(id, closeToast)}
+              className="px-3 py-1 bg-red-600 text-white rounded-md text-sm"
+            >
+              Yes, Delete
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        autoClose: false,
+        closeOnClick: false,
+      }
+    );
+  };
+
+  const confirmMobileDelete = async (id, closeToast) => {
+    closeToast(); // close confirmation toast
+
+    const toastId = toast.loading("Deleting Banner...");
+
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `https://ba-dastoor-backend.onrender.com/api/banners/mobile/delete-mobileBanner/${id}`
       );
-      console.log(res);
-      fetchMobileBanners();
-      alert("Banner deleted successfully");
+
+      toast.update(toastId, {
+        render: "Banner deleted successfully 🗑️",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+
+      await fetchMobileBanners();
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      toast.update(toastId, {
+        render: error?.response?.data?.message || "Failed to delete banner ❌",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
   };
 
