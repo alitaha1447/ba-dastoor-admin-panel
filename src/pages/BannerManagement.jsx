@@ -182,6 +182,18 @@ const BannerManagement = () => {
     }
   };
 
+  // Reset banners
+  const handleResetBanners = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to reset all banners for this section?"
+      )
+    ) {
+      setDesktopPreview(null);
+      setMobilePreview(null);
+    }
+  };
+
   // Remove image
   const handleRemoveImage = (type) => {
     if (type === "desktop") {
@@ -235,8 +247,6 @@ const BannerManagement = () => {
         }
       );
       console.log(res);
-      // handleResetBanners()
-      fetchDesktopBanners();
       // alert("Uploaded successfully");
       toast.update(toastId, {
         render: "Mobile banner uploaded successfully ✅",
@@ -244,6 +254,8 @@ const BannerManagement = () => {
         isLoading: false,
         autoClose: 2000,
       });
+      await fetchDesktopBanners();
+      handleResetBanners();
     } catch (error) {
       console.log("Error while uploading banner --> ", error);
       toast.update(toastId, {
@@ -301,7 +313,7 @@ const BannerManagement = () => {
       console.log(res);
       // fetchBanners()
       // handleResetBanners()
-      fetchMobileBanners();
+      // fetchMobileBanners();
       // ✅ SUCCESS TOAST UPDATE
       toast.update(toastId, {
         render: "Mobile banner uploaded successfully ✅",
@@ -309,6 +321,8 @@ const BannerManagement = () => {
         isLoading: false,
         autoClose: 2000,
       });
+      await fetchDesktopBanners();
+      handleResetBanners();
       // alert("Uploaded successfully");
     } catch (error) {
       console.log("Error while uploading mobile banner --> ", error);
@@ -321,18 +335,6 @@ const BannerManagement = () => {
       });
     } finally {
       setIsMobileUploading(false);
-    }
-  };
-
-  // Reset banners
-  const handleResetBanners = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to reset all banners for this section?"
-      )
-    ) {
-      setDesktopPreview(null);
-      setMobilePreview(null);
     }
   };
 
