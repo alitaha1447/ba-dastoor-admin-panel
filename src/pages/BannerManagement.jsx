@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Upload,
   Image as ImageIcon,
@@ -10,6 +10,10 @@ import {
   RotateCcw,
   CheckCircle,
   Plus,
+  ChevronUp,
+  ChevronDown,
+  Image,
+  Video,
 } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -94,12 +98,17 @@ const BannerManagement = () => {
 
   // Get current section
   const currentSection = websiteSections.find(
-    (section) => section.id === selectedSection
+    (section) => section.id === selectedSection,
   );
+  const [filterType, setFilterType] = useState("image"); // default image
+  const [filterMobileType, setFilterMobileType] = useState("image"); // default image
+
+  // const [desktopFilterType, setDesktopFilterType] = useState("image");
+  // const [imageFilterType, setImageFilterType] = useState("image");
 
   const fetchDesktopBanners = async () => {
     const res = await axios.get(
-      `https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${currentSection?.id}`
+      `https://ba-dastoor-backend.onrender.com/api/banners/get-desktopBanner?page=${currentSection?.id}`,
     );
     console.log(res?.data?.data);
     setDesktopBanners(res?.data?.data);
@@ -117,7 +126,7 @@ const BannerManagement = () => {
 
   const fetchMobileBanners = async () => {
     const res = await axios.get(
-      `https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${currentSection?.id}`
+      `https://ba-dastoor-backend.onrender.com/api/banners/mobile/get-mobileBanner?page=${currentSection?.id}`,
     );
     console.log(res?.data?.data);
     setMobileBanners(res?.data?.data);
@@ -186,7 +195,7 @@ const BannerManagement = () => {
   const handleResetBanners = () => {
     if (
       window.confirm(
-        "Are you sure you want to reset all banners for this section?"
+        "Are you sure you want to reset all banners for this section?",
       )
     ) {
       setDesktopPreview(null);
@@ -221,7 +230,7 @@ const BannerManagement = () => {
         formData.append("desktop", savedBanners.desktop);
         formData.append(
           "desktopMediaType",
-          savedBanners.desktop.type.startsWith("video/") ? "video" : "image"
+          savedBanners.desktop.type.startsWith("video/") ? "video" : "image",
         );
       }
 
@@ -244,7 +253,7 @@ const BannerManagement = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
       console.log(res);
       // alert("Uploaded successfully");
@@ -284,7 +293,7 @@ const BannerManagement = () => {
         formData.append("mobile", savedBanners.mobile);
         formData.append(
           "mobileMediaType",
-          savedBanners.mobile.type.startsWith("video/") ? "video" : "image"
+          savedBanners.mobile.type.startsWith("video/") ? "video" : "image",
         );
       }
 
@@ -308,7 +317,7 @@ const BannerManagement = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
       console.log(res);
       // fetchBanners()
@@ -368,7 +377,7 @@ const BannerManagement = () => {
       {
         autoClose: false,
         closeOnClick: false,
-      }
+      },
     );
   };
   const confirmDelete = async (id, closeToast) => {
@@ -378,7 +387,7 @@ const BannerManagement = () => {
 
     try {
       await axios.delete(
-        `https://ba-dastoor-backend.onrender.com/api/banners/delete-desktopBanner/${id}`
+        `https://ba-dastoor-backend.onrender.com/api/banners/delete-desktopBanner/${id}`,
       );
 
       toast.update(toastId, {
@@ -430,7 +439,7 @@ const BannerManagement = () => {
       {
         autoClose: false,
         closeOnClick: false,
-      }
+      },
     );
   };
 
@@ -441,7 +450,7 @@ const BannerManagement = () => {
 
     try {
       await axios.delete(
-        `https://ba-dastoor-backend.onrender.com/api/banners/mobile/delete-mobileBanner/${id}`
+        `https://ba-dastoor-backend.onrender.com/api/banners/mobile/delete-mobileBanner/${id}`,
       );
 
       toast.update(toastId, {
@@ -471,11 +480,11 @@ const BannerManagement = () => {
 
     // ✅ Update UI instantly
     setSelectedDesktopBanners((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
 
     const toastId = toast.loading(
-      nextState ? "Showing banner on home..." : "Removing banner from home..."
+      nextState ? "Showing banner on home..." : "Removing banner from home...",
     );
     try {
       await axios.patch(
@@ -483,7 +492,7 @@ const BannerManagement = () => {
         {
           ids: [id],
           isSelected: nextState,
-        }
+        },
       );
       toast.update(toastId, {
         render: "Banner updated successfully ✅",
@@ -495,7 +504,7 @@ const BannerManagement = () => {
       console.error(error);
       // ❌ Rollback UI on failure
       setSelectedDesktopBanners((prev) =>
-        nextState ? prev.filter((item) => item !== id) : [...prev, id]
+        nextState ? prev.filter((item) => item !== id) : [...prev, id],
       );
 
       toast.update(toastId, {
@@ -517,11 +526,11 @@ const BannerManagement = () => {
 
     // ✅ Update UI instantly
     setSelectedMobileBanners((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
 
     const toastId = toast.loading(
-      nextState ? "Showing banner on home..." : "Removing banner from home..."
+      nextState ? "Showing banner on home..." : "Removing banner from home...",
     );
     try {
       await axios.patch(
@@ -529,7 +538,7 @@ const BannerManagement = () => {
         {
           ids: [id],
           isSelected: nextState,
-        }
+        },
       );
       toast.update(toastId, {
         render: "Banner updated successfully ✅",
@@ -541,7 +550,7 @@ const BannerManagement = () => {
       console.error(error);
       // ❌ Rollback UI on failure
       setSelectedDesktopBanners((prev) =>
-        nextState ? prev.filter((item) => item !== id) : [...prev, id]
+        nextState ? prev.filter((item) => item !== id) : [...prev, id],
       );
 
       toast.update(toastId, {
@@ -555,67 +564,34 @@ const BannerManagement = () => {
     }
   };
 
-  // const handleUpdateSelectedDesktopBanners = async (isSelected) => {
-  //     console.log(isSelected)
-  //     if (selectedDesktopBanners.length === 0) {
-  //         alert("Please select at least one banner");
-  //         return;
-  //     }
+  // FILTER MEDDIA TYPE IN DESKTOP BANNER
 
-  //     const toastId = toast.loading(
-  //         'Updating Banner...'
-  //     );
+  const handleFilterChange = (type) => {
+    setFilterType(type); // "image" | "video"
+  };
 
-  //     try {
-  //         const res = await axios.patch(
-  //             "http://localhost:3000/api/banners/patch-desktopBanner",
-  //             {
-  //                 ids: selectedDesktopBanners,
-  //                 isSelected: isSelected,
-  //             }
-  //         );
+  const filteredBanners = useMemo(() => {
+    return desktopBanners.filter((banner) => banner.mediaType === filterType);
+  }, [desktopBanners, filterType]);
 
-  //         toast.update(toastId, {
-  //             render: 'Banners updated successfully ✅',
-  //             type: 'success',
-  //             isLoading: false,
-  //             autoClose: 2000,
-  //         });
+  // FILTER MEDDIA TYPE IN MOBILE BANNER
 
-  //         // console.log("Selection updated:", res.data);
-  //         // refetch
-  //         fetchDesktopBanners();
-  //         // 🧹 Clear selection after success
-  //         setSelectedDesktopBanners([]);
+  const handleFilterChangeMobile = (type) => {
+    setFilterMobileType(type); // "image" | "video"
+  };
 
-  //     } catch (error) {
-  //         console.error("Error updating selection:", error);
-  //         alert("Failed to update banner selection");
-  //     }
-  // }
+  const filteredMobileBanners = useMemo(() => {
+    return mobileBanners.filter(
+      (banner) => banner.mediaType === filterMobileType,
+    );
+  }, [mobileBanners, filterMobileType]);
 
-  // const handleToggleDesktopBanner = async (id, currentState) => {
-  //     console.log(id, currentState);
-  //     const nextState = !currentState;
-
-  //     // ✅ Optimistic UI update (THIS fixes checkbox)
-  //     setSelectedDesktopBanners(prev =>
-  //         prev.map(banner =>
-  //             banner._id === id
-  //                 ? { ...banner, isSelected: nextState }
-  //                 : banner
-  //         )
-  //     );
-  // }
-
-  console.log(selectedSection);
   return (
     <div className="">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Banner Management</h1>
       </div>
-
       {/*  */}
       <div className="mb-8">
         <div className="flex flex-wrap gap-2">
@@ -921,14 +897,56 @@ const BannerManagement = () => {
                     Action{" "}
                   </th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                    {" "}
-                    Select Media{" "}
+                    <div className="flex items-center gap-2">
+                      Select Media
+                      <div>
+                        <button
+                          onClick={() => handleFilterChange("image")}
+                          title="Show Images"
+                          // className="p-1"
+                        >
+                          <ChevronUp
+                            className={`w-4 h-4 ${
+                              filterType === "image"
+                                ? "text-blue-800"
+                                : "text-gray-400"
+                            }`}
+                          />
+                        </button>
+
+                        <button
+                          onClick={() => handleFilterChange("video")}
+                          title="Show Videos"
+                          // className="p-1"
+                        >
+                          <ChevronDown
+                            className={`w-4 h-4 ${
+                              filterType === "video"
+                                ? "text-purple-800"
+                                : "text-gray-400"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {desktopBanners?.length > 0 ? (
-                  desktopBanners.map((banner, index) => (
+                {/* {filteredBanners.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-4 py-6 text-center text-sm text-gray-500"
+                    >
+                      {filterMobileType === "image"
+                        ? "📷 No image banners available"
+                        : "🎥 No video banners available"}
+                    </td>
+                  </tr>
+                )} */}
+                {filteredBanners?.length > 0 ? (
+                  filteredBanners.map((banner, index) => (
                     <tr
                       key={banner._id || index}
                       className="hover:bg-gray-50 transition"
@@ -959,13 +977,6 @@ const BannerManagement = () => {
 
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          {/* <button
-                                                        // onClick={() => handleEditClick(job)}
-                                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="Edit"
-                                                    >
-                                                        <Edit className="w-4 h-4" />
-                                                    </button> */}
                           <button
                             onClick={() =>
                               handleDeleteDesktopBanner(banner?._id, "desktop")
@@ -978,12 +989,6 @@ const BannerManagement = () => {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        {/* <input
-                                                    type="checkbox"
-                                                    checked={selectedDesktopBanners.includes(banner._id)}
-                                                    onChange={() => toggleSelectOne(banner._id)}
-                                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                                /> */}
                         <input
                           type="checkbox"
                           checked={selectedDesktopBanners.includes(banner._id)}
@@ -1005,23 +1010,6 @@ const BannerManagement = () => {
                   </tr>
                 )}
               </tbody>
-              {/* <div className="flex gap-2 mt-2 mb-2">
-                                <button
-                                    onClick={() => handleUpdateSelectedDesktopBanners(true)}
-                                    disabled={selectedDesktopBanners.length === 0}
-                                    className=" py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-                                >
-                                    Show on Home
-                                </button>
-
-                                <button
-                                    onClick={() => handleUpdateSelectedDesktopBanners(false)}
-                                    disabled={selectedDesktopBanners.length === 0}
-                                    className=" py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-                                >
-                                    Remove from Home
-                                </button>
-                            </div> */}
             </table>
           </div>
           {/* Mobile Banner list */}
@@ -1041,15 +1029,45 @@ const BannerManagement = () => {
                     Action{" "}
                   </th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                    {" "}
-                    Select Media{" "}
+                    <div className="flex items-center gap-2">
+                      Select Media
+                      <div>
+                        <button
+                          onClick={() => handleFilterChangeMobile("image")}
+                          title="Show Images"
+                          // className="p-1"
+                        >
+                          <ChevronUp
+                            className={`w-4 h-4 ${
+                              filterMobileType === "image"
+                                ? "text-blue-800"
+                                : "text-gray-400"
+                            }`}
+                          />
+                        </button>
+
+                        <button
+                          onClick={() => handleFilterChangeMobile("video")}
+                          title="Show Videos"
+                          // className="p-1"
+                        >
+                          <ChevronDown
+                            className={`w-4 h-4 ${
+                              filterMobileType === "video"
+                                ? "text-purple-800"
+                                : "text-gray-400"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
                   </th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-200 bg-white">
-                {mobileBanners?.length > 0 ? (
-                  mobileBanners.map((banner, index) => (
+                {filteredMobileBanners?.length > 0 ? (
+                  filteredMobileBanners.map((banner, index) => (
                     <tr
                       key={banner._id || index}
                       className="hover:bg-gray-50 transition"
@@ -1071,13 +1089,7 @@ const BannerManagement = () => {
                           />
                         </td>
                       )}
-                      {/* <td className="px-4 py-3">
-                        <img
-                          src={banner?.mobile?.url}
-                          alt="Mobile Banner"
-                          className="h-16 w-32 rounded-md object-cover border border-gray-200 shadow-sm"
-                        />
-                      </td> */}
+
                       <td className="px-4 py-3">
                         <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600 capitalize">
                           {banner.mediaType}
@@ -1086,13 +1098,6 @@ const BannerManagement = () => {
 
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          {/* <button
-                                                        // onClick={() => handleEditClick(job)}
-                                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="Edit"
-                                                    >
-                                                        <Edit className="w-4 h-4" />
-                                                    </button> */}
                           <button
                             onClick={() =>
                               handleDeleteMobileBanner(banner?._id)
@@ -1112,12 +1117,6 @@ const BannerManagement = () => {
                           disabled={loadingMobileBannerId === banner._id}
                           className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                         />
-
-                        {/* type="checkbox"
-                                                checked={selectedDesktopBanners.includes(banner._id)}
-                                                onChange={() => toggleSelectDesktopBanner(banner._id)}
-                                                disabled={loadingBannerId === banner._id}
-                                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" */}
                       </td>
                     </tr>
                   ))
